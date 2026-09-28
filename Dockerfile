@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY . .
 
-# Buat folder bootstrap/cache & storage serta atur permission
+# Buat folder penyimpanan & atur hak akses
 RUN mkdir -p bootstrap/cache storage/framework/sessions storage/framework/views storage/framework/cache \
     && chmod -R 777 storage bootstrap/cache
 
@@ -26,4 +26,5 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader -
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
+# Gunakan script pembuka yang aman
+CMD exec php artisan serve --host=0.0.0.0 --port=${PORT}
