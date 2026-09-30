@@ -14,7 +14,6 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@mosandystore.com'],
             [
                 'name' => 'Administrator',
-                'phone' => null,
                 'password' => Hash::make('Admin@1998!'),
                 'role' => 'admin',
                 'status' => 'active',
