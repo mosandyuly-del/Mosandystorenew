@@ -1,4 +1,4 @@
-FROM php:8.3-cli
+FROM php:8.4-cli
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -8,9 +8,17 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libpq-dev \
     zip \
-    unzip
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install \
+    pdo_pgsql \
+    pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd
 
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
@@ -18,13 +26,18 @@ WORKDIR /app
 
 COPY . .
 
-# Buat folder penyimpanan & atur hak akses
-RUN mkdir -p bootstrap/cache storage/framework/sessions storage/framework/views storage/framework/cache \
+RUN mkdir -p \
+    bootstrap/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/framework/cache \
     && chmod -R 777 storage bootstrap/cache
 
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-interaction
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction
 
 EXPOSE 8080
 
-# Gunakan script pembuka yang aman
-CMD exec php artisan serve --host=0.0.0.0 --port=${PORT}
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
