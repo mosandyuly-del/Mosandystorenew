@@ -23,7 +23,11 @@ class AuthController extends Controller
         if (Auth::attempt($d, $r->boolean('remember'))) {
             $r->session()->regenerate();
 
-            return redirect()->intended('/');
+            return redirect()->intended(
+                auth()->user()->role === 'admin'
+                    ? route('admin.dashboard')
+                    : route('dashboard')
+            );
         }
 
         return back()->withErrors([
@@ -54,7 +58,7 @@ class AuthController extends Controller
 
         $r->session()->regenerate();
 
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function logout(Request $r)
