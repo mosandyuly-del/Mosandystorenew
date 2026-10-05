@@ -78,3 +78,9 @@ use App\Http\Controllers\Admin\IpCheckController;
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/cek-ip-digiflazz', [IpCheckController::class, 'index'])->name('admin.ip.check');
 });
+
+use App\Http\Controllers\Admin\DigiflazzSyncController;
+
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::post('/sync-digiflazz', [DigiflazzSyncController::class, 'sync'])->name('admin.digiflazz.sync');
+});
