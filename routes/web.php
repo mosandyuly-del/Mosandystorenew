@@ -72,3 +72,9 @@ Route::middleware(['auth', 'admin'])
         Route::get('/products', [AdminController::class, 'products'])
             ->name('products');
     });
+
+use App\Http\Controllers\Admin\IpCheckController;
+
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/cek-ip-digiflazz', [IpCheckController::class, 'index'])->name('admin.ip.check');
+});
