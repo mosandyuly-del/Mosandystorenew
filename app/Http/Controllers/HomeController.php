@@ -9,15 +9,15 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        // Mengambil daftar kategori unik
+        // Mengambil daftar kategori unik (penyesuaian boolean PostgreSQL)
         $categories = DB::table('products')
             ->select('category')
+            ->whereNotNull('category')
             ->where('buyer_product_status', true)
             ->where('seller_product_status', true)
             ->groupBy('category')
             ->pluck('category');
 
-        // Filter produk berdasarkan kategori jika dipilih
         $selectedCategory = $request->get('category', $categories->first());
 
         $products = DB::table('products')
